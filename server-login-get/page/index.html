@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="login.js"></script>
+    <script>
+        var login = function () {
+            var stuNum = document.getElementById('stuNum').value;
+            var psd = document.getElementById('psd').value;
+            console.log(stuNum,psd)
+            var params = `stuNum=${stuNum}&password=${psd}`;
+            console.log(params)
+            xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        if(xhr.responseText == 'ok'){
+                            alert('成功')
+                        }else{
+                            alert('失败')
+                        }
+                    } else {
+                        console.log('error');
+                    }
+                }
+            }
+            xhr.open('get', '/login' + '?' + params, true);
+            xhr.send(null);
+        }
+    </script>
+</head>
+
+<body>
+    <input type="text" id="stuNum" placeholder="学号">
+    <input type="password" id="psd" placeholder="密码">
+    <input type="submit" id="btn" value="提交" onclick="login()">
+
+</body>
+
+</html>
