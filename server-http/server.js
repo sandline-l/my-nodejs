@@ -11,6 +11,7 @@ let globalConf = require('./config');
 let loader = require('./loader');
 //引入写日志的方法
 let log = require('./log');
+console.log('123')
 //创建server, 并监听(listen) ,当有请求时,返回值
 //request ,是解析好的http请求  ,   response 响应
  http.createServer(function (request, response) {

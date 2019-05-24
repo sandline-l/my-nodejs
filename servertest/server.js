@@ -5,7 +5,7 @@ let globalConf = require('./config')
 //创建server
 let server = net.createServer();
 // server监听请求
-server.listen(globalConf.port,"192.168.1.140");
+server.listen(globalConf.port,"localhost");
 
 //服务器启动
 server.on('listening',function () {
