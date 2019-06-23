@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #preview {
+            width: 200px;
+            height: 150px;
+            border: 1px solid black;
+        }
+        .box {
+            width: 400px;
+            height: 400px;
+            margin: 100px auto;
+            border: 1px solid black;
+            position: relative;
+            display: none;
+        }
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 0px;
+        }
+        .head {
+            height: 50px;
+            line-height: 50px;
+            background-color: #999;
+        }
+    </style>
+    <!--<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>-->
+    <script src="./jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        function imgPreview(fileDom) {
+            console.log('444')
+            //判断是否支持FileReader
+            if (window.FileReader) {
+                var reader = new FileReader();
+            } else {
+                alert("您的设备不支持图片预览功能，如需该功能请升级您的设备！");
+            }
+            //获取文件
+            var file = fileDom.files[0];
+            var imageType = /^image\//;
+            //是否是图片
+            if (!imageType.test(file.type)) {
+                alert("请选择图片！");
+                return;
+            }
+            //读取完成
+            reader.onload = function (e) {
+                //获取图片dom
+                var img = document.getElementById("preview");
+                //图片路径设置为读取的图片 , e.target.result 是文件资源
+                img.src = e.target.result;
+                // console.log(e.target.result)
+                // ajax 上传图片
+
+                // $.post("http://localhost:3000/public/upload", { img: e.target.result }, function (ret) {
+                //     console.log(ret);
+                //     if (ret.img != '') {
+                //         alert('upload success');
+                //         $('#showimg').html('<img src="' + ret.img + '">');
+                //     } else {
+                //         alert('upload fail');
+                //     }
+                // }, 'json');
+
+                xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            console.log('成功');
+                            if(xhr.responseText == 'ok'){
+                                alert('成功');
+                                $('#showimg').html('<img src="' + ret.img + '">');
+                                location.href = 'http://localhost:3000/public/upload.html'
+                            }else{
+                                alert('失败')
+                            }
+                        } else {
+                            console.log('error');
+                        }
+                    }
+                };
+                xhr.open('post', 'http://localhost:3000/public/upload2', true);
+                console.log('ninini');
+                xhr.send(reader);
+            };
+            //读取指定的file对象, 读取操作完成之后,readyState 会变成done ,并触发loadend 事件
+            reader.readAsDataURL(file);
+        }
+
+        function two() {
+            var obj = new FormData();
+            obj.append("img",$("input").get(0).files[0]);
+            // $.ajax({
+            //     url:"http://localhost:3000/upload2",
+            //     type:"post",
+            //     data:obj,
+            //     processData:false, // 不处理数据
+            //     contentType : false, // 不设置请求头
+            //     cache:false,
+            //     success:function(data){
+            //         console.log(data)
+            //     }
+            // })
+            xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        console.log('成功');
+                        if(xhr.responseText == 'ok'){
+                            alert('成功');
+                            $('#showimg').html('<img src="' + ret.img + '">');
+                            location.href = 'http://localhost:3000/public/upload.html'
+                        }else{
+                            alert('失败')
+                        }
+                    } else {
+                        console.log('error');
+                    }
+                }
+            };
+            xhr.open('post', 'http://localhost:3000/upload2', true);
+            console.log('ninini');
+            xhr.send(obj);
+        }
+
+    </script>
+</head>
+
+<body>
+    <button class="update">上传文件</button>
+    <div class="box">
+        <form action="/upload" enctype="multipart/form-data" method="post">
+            <div class="head">
+                <span>上传图片</span>
+                <span class="close">X</span>
+            </div>
+            <div class="content">
+                <!--<input type="file" name="file" id="imgFile" onchange="imgPreview(this)" />-->
+                <input type="file" name="file" id="imgFile" onchange="two()" />
+                <img id="preview" />
+                <!--<input type="file" name="upload" multiple="multiple">-->
+                <!--<input type="submit" value="Upload file" />-->
+                <!--<p id="showimg"></p>-->
+            </div>
+            <div class="foot">
+                <!--<button class="yes">确认上传</button>-->
+                <!--<input type="submit" value="提交" onclick="imgPreview"/>-->
+            </div>
+        </form>
+
+    </div>
+    <script>
+        var updatebtn = $('.update');
+        var box = $('.box');
+        var close = $('.close');
+        updatebtn.on('click', function () {
+            console.log(147);
+            box.css({ 'display': 'block' })
+        })
+        close.on('click', function () {
+            box.css({ 'display': 'none' })
+        })
+    </script>
+</body>
+
+</html>

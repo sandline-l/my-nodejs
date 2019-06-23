@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="login.js"></script>
+    <script>
+        var login = function () {
+            var stuNum = document.getElementById('stuNum').value;
+            var psd = document.getElementById('psd').value;
+            var params = `stuNum=${stuNum}&password=${psd}`;
+            xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        if (xhr.responseText == 'ok') {
+                            alert('成功')
+                            location.href = './main.html'
+                        } else {
+                            alert('失败')
+                        }
+                    } else {
+                        console.log('error');
+                    }
+                }
+            }
+            xhr.open('post', '/login', true);
+            xhr.send(params);
+        }
+    </script>
+</head>
+
+<body>
+    <!-- 请求的是哪个url ,向这个接口发送stuNum 和 psd数据-->
+    <form action="/login" method="POST">
+        <input type="text" id="stuNum" name="stuNum" placeholder="学号">
+        <input type="password" id="psd" name="psd" placeholder="密码">
+        <input type="submit" id="btn" value="提交">
+    </form>
+</body>
+
+</html>

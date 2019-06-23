@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        // 文件上传函数,使用ajax提交表单
+        function submitFile() {
+            var file = document.getElementById('file').files[0];
+            var form = new FormData();
+            form.append('file',file);
+            var xhr = new XMLHttpRequest();
+            //上传成功后,获取文件路径, 赋值给img标签的src ,使得图片显示在页面上
+            //这证明了一个问题,我们不用存后缀,只要存数据流就好了
+            //这个就是文件的下载,请求的这个接口,这个接口调用了一个方法
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200){
+                    var path = xhr.responseText;
+                    console.log(path)
+                    document.getElementById('pic').src = './getPic?path=' + path
+                }
+            }
+            xhr.open('post','/upload',true);
+            xhr.onload = function () {
+                alert('上传完成')
+            };
+            xhr.send(form);
+
+        }
+    </script>
+    <style>
+        img{
+            width: 80px;
+            height: 80px;
+        }
+        canvas{
+            border: 1px solid black;
+        }
+        .box{
+            width: 150px;
+            height: 150px;
+            border: 1px solid black;
+        }
+        .box>a{
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    这是main页面,文件上传页
+    <!--<input type="file" id="file">-->
+    <!--<input type="button" onclick="submitFile()" value="asd">-->
+    <!-- <img src="#" alt="" id="pic"> -->
+    <!--<a href="https://geekjc-img.geekjc.com/logo.png" download="logo.png">下载图片</a>-->
+    <!--<hr>-->
+    <!--这里就实现了点击下载的功能, 也是请求一个接口,获取数据-->
+    
+    <a href="/getPic?path=file\0074c2f4afa524095dae826830f43d34" 
+    download="Snipaste_2019-04-20_12-18-28.png">点击此处
+        <img src="#" alt="" id="pic">
+    </a>
+
+    <a href="./img/1.png" download="8.png"> 下载图片1
+        <img src="./img/1.png" alt="" >
+    </a>
+
+    <div class="box" >
+        <a href="./img/2.jpg" download="2.jpg">下载图片inner</a>
+    </div>
+    <a href="./img/3.jpg" download="3.jpg">下载图片3</a>
+    <hr>
+    <hr>
+    <hr>
+
+    <canvas id="canvas" width="200" height="200"></canvas>
+    <div class="box"></div>
+    <script>
+        function download(url, name) {
+            const aLink = document.createElement('a');
+            aLink.download = name;
+            aLink.href = url;
+            aLink.dispatchEvent(new MouseEvent('click', {}))
+        }
+        // 创建一个可以下载的a标签,并插入到div中,点击就可以下载
+        function download2(url, name) {
+            var box = document.getElementsByClassName('box')[0];
+            const aLink = document.createElement('a');
+            aLink.download = name;
+            aLink.href = url;
+            aLink.innerText = '这是个可以下载的图片';
+            aLink.addEventListener('click',function () {
+                console.log('下载了')
+            })
+            box.appendChild(aLink);
+        }
+        const canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();   // 创建一个<img>元素
+        img.onload = function(){
+            ctx.drawImage(img,0,0,200,200);  //画一个img到canvas里面
+            //当图片加载完之后,获取到的是img的base64格式的字符串
+            //这个要在图片加载完成之后进行,否则无法下载到需要的图片
+            download2(canvas.toDataURL(), 'name.png')
+        };
+        // img.src = './img/1.png'; // 设置图片源地址
+        img.src = './img/1.png'; // 设置图片源地址
+
+    </script>
+</body>
+</html>
